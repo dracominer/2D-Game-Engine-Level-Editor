@@ -1,0 +1,44 @@
+#version 140
+
+in vec2 position;
+
+in mat4 modelViewMatrix;
+in vec4 texOffsets;
+in float blendFactor;
+
+
+out vec2 textureCoords1;
+out vec2 textureCoords2;
+out float blend;
+out float visibility;
+
+uniform mat4 projectionMatrix;
+uniform float numberOfRows;
+
+uniform float density;
+uniform float gradient;
+
+
+void main(void){
+
+	vec2 textureCoords = position + vec2(0.5, 0.5);
+	textureCoords.y = 1.0 - textureCoords.y;
+	textureCoords /= numberOfRows;
+	textureCoords1 = textureCoords + texOffsets.xy;
+	textureCoords2 = textureCoords + texOffsets.zw;
+	blend = blendFactor;
+	
+	vec4 worldPos = modelViewMatrix * vec4(position, 0.0, 1.0);
+	
+	
+	vec4 posRelativeToCam = modelViewMatrix * worldPos;
+	
+	
+	float distance = length(posRelativeToCam.xyz);
+	visibility = exp(-pow((distance*density), gradient));
+	visibility = clamp(visibility, 0.0, 1.0);
+	
+	
+	gl_Position = projectionMatrix * worldPos;
+
+}

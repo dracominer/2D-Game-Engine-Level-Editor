@@ -1,0 +1,19 @@
+#version 400 core
+
+in vec2 position;
+
+out vec2 textureCoords;
+
+uniform mat4 transformationMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec2 offset;
+uniform float numberOfRows;
+
+
+void main(void){
+	vec4 worldPos = viewMatrix * transformationMatrix * vec4(position, 0.0, 1.0);
+	gl_Position = projectionMatrix * worldPos;
+	textureCoords = vec2((position.x+1.0)/2.0, 1 - (position.y+1.0)/2.0);
+	textureCoords = (textureCoords/numberOfRows) + offset;
+}

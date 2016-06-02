@@ -1,0 +1,24 @@
+#version 400 core
+
+in vec2 textureCoords;
+
+out vec4 out_Color;
+
+uniform sampler2D guiTexture;
+uniform vec2 percent;
+uniform float celLevels;
+
+
+void main(void){
+	if(textureCoords.x > percent.x){
+		discard;
+	}
+	if(textureCoords.y > percent.y){
+		discard;
+	}
+	vec4 color = texture(guiTexture, textureCoords);
+	if(color.a < 0.5){
+		discard;
+	}
+	out_Color = color;
+}

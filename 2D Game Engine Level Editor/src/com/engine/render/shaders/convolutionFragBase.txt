@@ -1,0 +1,24 @@
+#version 140
+
+in vec2 textureCoords[9];
+
+out vec4 out_Color;
+
+uniform sampler2D colourTexture;
+
+void main(void){
+	vec4 sample[9];
+	for(int i=0; i < 9; i++){
+		//loads up the samples of the texture
+		sample[i] = texture(colourTexture, textureCoords[i]);
+	}
+	//checks the horizontal (applies the convultion of the 'H' matrix)
+	vec4 horizEdge = (1.0*sample[2]) + (1.0*sample[5]) + (1.0*sample[8]) - (1.0*sample[0]) + (1.0*sample[3]) + (1.0*sample[6]);
+	//checks the vertical (applies the convultion of the 'H' matrix)
+    vec4 vertEdge  = (1.0*sample[0]) + (1.0*sample[1]) + (1.0*sample[2]) - (1.0*sample[6]) + (1.0*sample[7]) + (1.0*sample[8]);
+    
+    // from here on it is simply using the convoluted pixels to create the effect
+    
+    out_Color = mix(vertEdge, horizEdge, 0.5);
+    out_Color.a = 1.0;
+}

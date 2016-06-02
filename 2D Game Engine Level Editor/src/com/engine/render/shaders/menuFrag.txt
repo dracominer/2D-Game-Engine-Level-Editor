@@ -1,0 +1,22 @@
+#version 140
+
+in vec2 textureCoords;
+
+out vec4 out_Color;
+
+uniform float time;
+
+
+float getCol(float value){
+	return value/2.0 + 0.5;
+}
+
+void main(void){
+	float t = 50.0 * sin(time);
+	float x = textureCoords.x;
+	float y = textureCoords.y;
+	float r = getCol(sin(t * (x/time)));
+	float g = getCol(cos(t * (y/time)));
+	float b = getCol(sin((t * x + t * y)/time));
+	out_Color = vec4(r,g,b,1.0);
+}

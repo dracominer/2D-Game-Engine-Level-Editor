@@ -1,0 +1,26 @@
+#version 140
+
+in vec2 position;
+
+out vec2 textureCoords[9];
+
+uniform vec2 pixelSize;
+
+void main(void){
+	gl_Position = vec4(position, 0.0, 1.0);
+	vec2 coord = position * 0.5 + 0.5;
+	//Top row
+	textureCoords[0] = coord + vec2(-pixelSize.x, pixelSize.y);
+	textureCoords[1] = coord + vec2(0.0, pixelSize.y);
+	textureCoords[2] = coord + vec2(pixelSize.x, pixelSize.y);
+	
+	//Middle row
+	textureCoords[3] = coord + vec2(-pixelSize.x, 0.0);
+	textureCoords[4] = coord;
+	textureCoords[5] = coord + vec2(pixelSize.x, 0.0);
+	
+	//bottom row
+	textureCoords[6] = coord + vec2(-pixelSize.x, -pixelSize.y);
+	textureCoords[7] = coord + vec2(0.0, -pixelSize.y);
+	textureCoords[8] = coord + vec2(pixelSize.x, -pixelSize.y);
+}
