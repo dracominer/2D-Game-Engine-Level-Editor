@@ -15,7 +15,6 @@ import com.engine.entites.Entity;
 import com.engine.font.TextMaster;
 import com.engine.gui.GUI;
 import com.engine.level.tiles.Tile;
-import com.engine.particle.ParticleMaster;
 import com.engine.render.textures.ModelTexture;
 import com.engine.toolbox.Cleanupable;
 
@@ -37,7 +36,6 @@ public class MasterRenderer implements Cleanupable {
 		createProjectionMatrix();
 		entityRenderer = new EntityRenderer(projectionMatrix);
 		guiRenderer = new GuiRenderer();
-		ParticleMaster.init(projectionMatrix);
 		TextMaster.init(Loader.get());
 	}
 
@@ -83,7 +81,6 @@ public class MasterRenderer implements Cleanupable {
 		prepare();
 		entityRenderer.render(cam, entities, tiles);
 		guiRenderer.render(guis);
-		ParticleMaster.render(cam);
 		TextMaster.render();
 	}
 
@@ -152,7 +149,6 @@ public class MasterRenderer implements Cleanupable {
 		clearAll();
 		entityRenderer.cleanUp();
 		guiRenderer.cleanUp();
-		ParticleMaster.cleanup();
 		TextMaster.cleanup();
 	}
 

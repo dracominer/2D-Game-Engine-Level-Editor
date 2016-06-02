@@ -1,7 +1,6 @@
 package com.engine.toolbox;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -10,7 +9,6 @@ import org.lwjgl.util.vector.Vector3f;
 import com.engine.camera.Camera;
 import com.engine.entites.Entity;
 import com.engine.level.tiles.Tile;
-import com.engine.physics.Force;
 
 public class Maths {
 
@@ -58,23 +56,6 @@ public class Maths {
 		float x_i = number;
 		float x_f = Float.parseFloat(decimalFormat.format(x_i % 1));
 		return (float) (Math.floor(x_i) + x_f);
-	}
-
-	public static Force getNetForce(List<Force> forces) {
-		Force net = new Force(0, 0);
-		if (forces == null) return net;
-		if (forces.isEmpty()) return net;
-		float amount = 0;
-		for (Force f : forces) {
-			if (f != null) {
-				net.x += f.x;
-				net.y += f.y;
-				amount += 1f;
-			}
-		}
-		net.x = net.x / amount;
-		net.y = net.y / amount;
-		return net;
 	}
 
 	public static Matrix4f createTransformationMatrix(Tile tile) {

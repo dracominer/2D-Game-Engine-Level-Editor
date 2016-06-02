@@ -1,11 +1,9 @@
 package com.engine.gameState;
 
-import com.engine.level.LevelManager;
-
 public class GameStateManager {
 
 	public static enum STATE {
-		PLAY(), MAIN_MENU(), GAME_OVER();
+		MAIN_MENU(), LEVEL_EDIT();
 		private GameState state;
 
 		private STATE(GameState state) {
@@ -37,12 +35,10 @@ public class GameStateManager {
 
 	private static void loadGameStates() {
 		System.out.println("loading all states");
-		STATE.PLAY.setState(new StatePlay("play"));
 		STATE.MAIN_MENU.setState(new StateMenu("menu"));
-		STATE.GAME_OVER.setState(new StateGameOver("game over"));
+		STATE.LEVEL_EDIT.setState(new StateLevelEditing("level edit"));
 		currentGameState = STATE.MAIN_MENU;
 		currentGameState.getState().onOpened();
-		LevelManager.load();
 		System.out.println("loaded all states");
 	}
 

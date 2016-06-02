@@ -2,13 +2,10 @@ package com.engine.level.tiles;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import com.engine.data.DataFile;
-import com.engine.level.SavedLevel;
-import com.engine.level.tiles.generation.CelularAutonoma;
 import com.engine.render.MasterRenderer;
 import com.engine.render.textures.TextureManager;
 import com.engine.toolbox.Strings;
@@ -26,87 +23,30 @@ public class TileManager {
 	private int height;
 
 	public TileManager(int width, int height) {
-		TileRegistry.init();
+		this();
 		this.height = height;
 		this.width = width;
-		tiles = new Tile[this.width][this.height];
+	}
+
+	public TileManager() {
+		TileRegistry.init();
+		tiles = new Tile[50][50];
 		grass = new Tile(TextureManager.get(prefix + "grass"), 1.04f).setSolid(false);
 		stone = new Tile(TextureManager.get(prefix + "stone"), 1.01f).setSolid(true).setRestitution(1.5f);
-		System.out.println("Stone Solid? " + stone.isSolid());
-		System.out.println("Sand Solid? " + grass.isSolid());
 	}
 
-	private CelularAutonoma autonoma;
-	private boolean[][] cells;
-
-	public void generateCellularAutonoma(float chanceToStartAlive, int numberOfSteps, long seed) {
-		autonoma = new CelularAutonoma(chanceToStartAlive, numberOfSteps);
-		autonoma.setSeed(seed);
-		cells = autonoma.generate(width, height);
-		processCellList(cells);
-	}
-
-	public void step(boolean broken) {
-		cells = autonoma.doSimulationStep(cells);
-		processCellList(cells);
-	}
-
-	private void processCellList(boolean[][] cells) {
-		for (int x = 0; x < cells.length; x++) {
-			for (int y = 0; y < cells[0].length; y++) {
-				tiles[x][y] = cells[x][y] ? stone.copy().setPosition(x, y) : grass.copy().setPosition(x, y);
+	public void fillWithTile(Tile tile) {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[0].length; y++) {
+				Tile t = tile.copy();
+				t.setPosition(x, y);
+				tiles[x][y] = t;
 			}
 		}
-	}
-
-	public Vector2f getLogicalSpawnpoint(Random r, int tries, Vector2f playerPos, float minDistance) {
-		Vector2f result = createRandomSpawnpoint(r);
-		Tile t = getTileAt(result);
-		int count = 0;
-		while (true) {
-			result = createRandomSpawnpoint(r);
-			t = getTileAt(result);
-			count++;
-			if (t.isSolid()) {
-				Vector2f diff = Vector2f.sub(playerPos, result, null);
-				if (Math.abs(diff.length()) >= minDistance) break;
-			}
-			if (count >= tries) break;
-		}
-		return result;
-	}
-
-	public Vector2f getLogicalSpawnpoint(Random r, int tries) {
-		Vector2f result = createRandomSpawnpoint(r);
-		Tile t = getTileAt(result);
-		int count = 0;
-		while (t != null && t.isSolid()) {
-			result = createRandomSpawnpoint(r);
-			t = getTileAt(result);
-			count++;
-			if (count >= tries) break;
-		}
-		return result;
-	}
-
-	public Vector2f getLogicalSpawnpoint(Random r) {
-		Vector2f result = createRandomSpawnpoint(r);
-		Tile t = getTileAt(result);
-		while (t.isSolid()) {
-			result = createRandomSpawnpoint(r);
-			t = getTileAt(result);
-		}
-		return result;
-	}
-
-	private Vector2f createRandomSpawnpoint(Random r) {
-		int x = r.nextInt(width);
-		int y = r.nextInt(height);
-		return new Vector2f(x, y);
 	}
 
 	public boolean isIndexWithinBounds(int x, int y) {
-		return !(x < 0 || x >= width || y < 0 || y >= height);
+		return !(x < 0 || x >= tiles.length || y < 0 || y >= tiles[0].length);
 	}
 
 	public Tile getTileAt(float worldX, float worldY) {
@@ -118,16 +58,6 @@ public class TileManager {
 
 	public Tile getTileAt(Vector2f position) {
 		return getTileAt(position.x, position.y);
-	}
-
-	public boolean isSolid(float x, float y) {
-		Tile t = getTileAt(x, y);
-		if (t == null) return true;
-		return t.isSolid();
-	}
-
-	public boolean isSolid(Vector2f pos) {
-		return this.isSolid(pos.x, pos.y);
 	}
 
 	public Tile[][] getTiles() {
@@ -150,8 +80,6 @@ public class TileManager {
 			}
 		}
 	}
-
-	public void generateBinarySpacePartitionDungeon() {}
 
 	public void loadLevel(DataFile data) {
 		loadingTiles = false;
@@ -208,7 +136,6 @@ public class TileManager {
 			System.out.println("loading a tile @ (" + load_X + "," + load_Y + ").");
 			setTile(load_X, load_Y, t);
 			load_Y++;
-			hasRealTiles = true;
 			return;
 		}
 		if (line.startsWith("width")) {
@@ -241,19 +168,13 @@ public class TileManager {
 		int x = (int) Math.floor(mouseWorldPosition.x / Tile.TileSize);
 		int y = (int) Math.floor(mouseWorldPosition.y / Tile.TileSize);
 		if (!isIndexWithinBounds(x, y)) return;
-		tile.setPosition(x, y);
+		if (tile != null) tile.setPosition(x, y);
 		tiles[x][y] = tile;
 	}
 
-	private boolean hasRealTiles = false;
-
-	public void createTilesFromData(DataFile data, SavedLevel savedLevel) {
-		hasRealTiles = false;
+	public void createTilesFromData(DataFile data) {
 		for (String line : data.getLines()) {
 			handleLine(line);
-		}
-		if (!hasRealTiles) {
-			savedLevel.onDataFailToLoad();
 		}
 	}
 

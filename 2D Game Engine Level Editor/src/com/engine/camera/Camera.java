@@ -78,7 +78,7 @@ public class Camera {
 		return Maths.createViewMatrix(this);
 	}
 
-	public void increasePosition(int x, int y, float z) {
+	public void increasePosition(float x, float y, float z) {
 		this.position.x += x;
 		this.position.y += y;
 		this.position.z += z;
@@ -95,6 +95,47 @@ public class Camera {
 
 	public void update(float mincamz, float maxcamz, float mouseSensitivity, Vector3f playerPos) {
 		this.update(mincamz, maxcamz, mouseSensitivity, new Vector2f(playerPos.x, playerPos.y));
+	}
+
+	public void update(float minZ, float maxZ, float sensitivity, float moveSpeed, float threshold) {
+		float x = getX();
+		float y = getY();
+		float z = Mouse.getDWheel() * sensitivity;
+		if (Math.abs(x) >= threshold) {
+			if (x > 0) {
+				x -= threshold;
+			} else {
+				x += threshold;
+			}
+		} else {
+			x = 0;
+		}
+		if (Math.abs(y) >= threshold) {
+			if (y > 0) {
+				y -= threshold;
+			} else {
+				y += threshold;
+			}
+		} else {
+			y = 0;
+		}
+		x *= moveSpeed * DisplayManager.getFrameTimeSeconds();
+		y *= moveSpeed * DisplayManager.getFrameTimeSeconds();
+		this.increasePosition(x, y, -z);
+		if (position.z < minZ) position.z = minZ;
+		if (position.z > maxZ) position.z = maxZ;
+	}
+
+	private float getX() {
+		float mx = Mouse.getX();
+		mx /= DisplayManager.getWidth();
+		return (mx - 0.5f) * 2f;
+	}
+
+	private float getY() {
+		float mx = Mouse.getY();
+		mx /= DisplayManager.getHeight();
+		return (mx - 0.5f) * 2f;
 	}
 
 }

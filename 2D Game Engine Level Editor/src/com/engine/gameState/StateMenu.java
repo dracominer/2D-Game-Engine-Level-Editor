@@ -22,13 +22,15 @@ public class StateMenu extends GameState {
 
 	private List<GuiUpdatable> guis = new ArrayList<GuiUpdatable>();
 
+	//TODO make the buttons to create the new files and stuffs.
+
 	public StateMenu(String name) {
 		super(name);
 		renderer = new MenuRenderer(false);
 		rendererGuis = new GuiRenderer();
 		TextureManager.registerTexture("button", "/gui/button");
 		GuiStateChangeButton button = new GuiStateChangeButton(TextureManager.get("button"), new Vector2f(0f, -0.25f), new Vector2f(0.75f, 0.125f));
-		button.setNewState(STATE.PLAY.toString());
+		button.setNewState(STATE.LEVEL_EDIT.toString());
 		guis.add(button);
 	}
 
