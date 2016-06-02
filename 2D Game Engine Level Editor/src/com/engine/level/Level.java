@@ -5,6 +5,8 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.engine.camera.Camera;
+import com.engine.gameState.GameStateManager;
+import com.engine.gameState.StateLevelEditing;
 import com.engine.level.tiles.Tile;
 import com.engine.level.tiles.TileManager;
 import com.engine.render.MasterRenderer;
@@ -28,12 +30,19 @@ public class Level {
 
 	protected Tile selectedTile = null;
 
-	public Level() {
+	private StateLevelEditing owner;
+
+	public Level(StateLevelEditing stateLevelEditing) {
+		this.owner = stateLevelEditing;
 		renderer = new MasterRenderer();
 		tileManager = new TileManager(25, 25);
 		cam = new Camera(new Vector3f(0, 0, 5));
 		picker = new MousePicker(cam, MasterRenderer.getProjectionMatrix());
-		tileManager.fillWithTile(TileManager.grass);
+		if (GameStateManager.file.getLocation() != null) {
+			tileManager.loadLevel(GameStateManager.file);
+		} else {
+			tileManager.fillWithTile(TileManager.grass);
+		}
 	}
 
 	public void update() {
@@ -46,7 +55,7 @@ public class Level {
 				System.out.println("selected tile was found null");
 			} else {
 				this.selectedTile = t.copy();
-				System.out.print("Selected tile is now: " + selectedTile.toString());
+				System.out.println("Selected tile is now: " + selectedTile.toString());
 			}
 		}
 		if (Mouse.isButtonDown(0)) {
@@ -92,4 +101,110 @@ public class Level {
 	public Vector2f getMouseCoords() {
 		return new Vector2f(Mouse.getX(), Mouse.getY());
 	}
+
+	/**
+	 * @return the renderer
+	 */
+	public MasterRenderer getRenderer() {
+		return renderer;
+	}
+
+	/**
+	 * @param renderer the renderer to set
+	 */
+	public void setRenderer(MasterRenderer renderer) {
+		this.renderer = renderer;
+	}
+
+	/**
+	 * @return the picker
+	 */
+	public MousePicker getPicker() {
+		return picker;
+	}
+
+	/**
+	 * @param picker the picker to set
+	 */
+	public void setPicker(MousePicker picker) {
+		this.picker = picker;
+	}
+
+	/**
+	 * @return the selectedTile
+	 */
+	public Tile getSelectedTile() {
+		return selectedTile;
+	}
+
+	/**
+	 * @param selectedTile the selectedTile to set
+	 */
+	public void setSelectedTile(Tile selectedTile) {
+		this.selectedTile = selectedTile;
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public StateLevelEditing getOwner() {
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(StateLevelEditing owner) {
+		this.owner = owner;
+	}
+
+	/**
+	 * @return the mincamz
+	 */
+	public static float getMincamz() {
+		return minCamZ;
+	}
+
+	/**
+	 * @return the maxcamz
+	 */
+	public static float getMaxcamz() {
+		return maxCamZ;
+	}
+
+	/**
+	 * @return the mouseSensitivity
+	 */
+	public static float getMouseSensitivity() {
+		return MOUSE_SENSITIVITY;
+	}
+
+	/**
+	 * @return the camMoveSpeed
+	 */
+	public static float getCamMoveSpeed() {
+		return CAM_MOVE_SPEED;
+	}
+
+	/**
+	 * @return the camMoveThreshold
+	 */
+	public static float getCamMoveThreshold() {
+		return CAM_MOVE_THRESHOLD;
+	}
+
+	/**
+	 * @param cam the cam to set
+	 */
+	public void setCam(Camera cam) {
+		this.cam = cam;
+	}
+
+	/**
+	 * @param tileManager the tileManager to set
+	 */
+	public void setTileManager(TileManager tileManager) {
+		this.tileManager = tileManager;
+	}
+
 }

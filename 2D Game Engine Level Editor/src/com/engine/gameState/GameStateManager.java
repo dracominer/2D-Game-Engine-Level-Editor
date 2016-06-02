@@ -1,6 +1,11 @@
 package com.engine.gameState;
 
+import com.engine.data.DataFile;
+
 public class GameStateManager {
+
+	public static String fileLocation = "C:/levels";
+	public static DataFile file = new DataFile("CurrentLevel", null);
 
 	public static enum STATE {
 		MAIN_MENU(), LEVEL_EDIT();
@@ -56,6 +61,20 @@ public class GameStateManager {
 		currentGameState = newState;
 		currentGameState.getState().onOpened();
 		System.out.println("Opening game state : " + currentGameState.getState().getName());
+	}
+
+	public static void setFileLocation(String location) {
+		fileLocation = location;
+		file.setLocation(fileLocation);
+		System.out.println("Location is now: " + fileLocation);
+	}
+
+	public static void loadDataFromFile() {
+		file.loadDataFromFile();
+	}
+
+	public static void save() {
+		file.saveData();
 	}
 
 }

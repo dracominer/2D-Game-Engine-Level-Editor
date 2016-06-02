@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector2f;
 import com.engine.gameState.GameStateManager.STATE;
 import com.engine.gui.GuiStateChangeButton;
 import com.engine.gui.GuiUpdatable;
+import com.engine.gui.SelectFileButton;
 import com.engine.render.DisplayManager;
 import com.engine.render.GuiRenderer;
 import com.engine.render.menu.MenuRenderer;
@@ -29,8 +30,10 @@ public class StateMenu extends GameState {
 		renderer = new MenuRenderer(false);
 		rendererGuis = new GuiRenderer();
 		TextureManager.registerTexture("button", "/gui/button");
-		GuiStateChangeButton button = new GuiStateChangeButton(TextureManager.get("button"), new Vector2f(0f, -0.25f), new Vector2f(0.75f, 0.125f));
+		SelectFileButton fileSelect = new SelectFileButton(TextureManager.get("button"), new Vector2f(0f, 0f), new Vector2f(0.125f, 0.125f));
+		GuiStateChangeButton button = new GuiStateChangeButton(TextureManager.get("button"), new Vector2f(0.0f, -0.75f), new Vector2f(0.75f, 0.125f));
 		button.setNewState(STATE.LEVEL_EDIT.toString());
+		guis.add(fileSelect);
 		guis.add(button);
 	}
 

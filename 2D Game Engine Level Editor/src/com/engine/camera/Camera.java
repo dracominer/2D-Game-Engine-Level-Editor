@@ -1,5 +1,6 @@
 package com.engine.camera;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -98,30 +99,34 @@ public class Camera {
 	}
 
 	public void update(float minZ, float maxZ, float sensitivity, float moveSpeed, float threshold) {
-		float x = getX();
-		float y = getY();
 		float z = Mouse.getDWheel() * sensitivity;
-		if (Math.abs(x) >= threshold) {
-			if (x > 0) {
-				x -= threshold;
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			float x = getX();
+			float y = getY();
+
+			if (Math.abs(x) >= threshold) {
+				if (x > 0) {
+					x -= threshold;
+				} else {
+					x += threshold;
+				}
 			} else {
-				x += threshold;
+				x = 0;
 			}
-		} else {
-			x = 0;
-		}
-		if (Math.abs(y) >= threshold) {
-			if (y > 0) {
-				y -= threshold;
+			if (Math.abs(y) >= threshold) {
+				if (y > 0) {
+					y -= threshold;
+				} else {
+					y += threshold;
+				}
 			} else {
-				y += threshold;
+				y = 0;
 			}
-		} else {
-			y = 0;
+			x *= moveSpeed * DisplayManager.getFrameTimeSeconds();
+			y *= moveSpeed * DisplayManager.getFrameTimeSeconds();
+			this.increasePosition(x, y, 0);
 		}
-		x *= moveSpeed * DisplayManager.getFrameTimeSeconds();
-		y *= moveSpeed * DisplayManager.getFrameTimeSeconds();
-		this.increasePosition(x, y, -z);
+		this.increasePosition(0, 0, -z);
 		if (position.z < minZ) position.z = minZ;
 		if (position.z > maxZ) position.z = maxZ;
 	}

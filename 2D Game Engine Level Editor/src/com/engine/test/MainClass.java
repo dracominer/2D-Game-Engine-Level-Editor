@@ -1,5 +1,7 @@
 package com.engine.test;
 
+import javax.swing.UIManager;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 

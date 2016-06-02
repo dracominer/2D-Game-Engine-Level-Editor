@@ -8,7 +8,7 @@ public class StateLevelEditing extends GameState {
 
 	public StateLevelEditing(String name) {
 		super(name);
-		level = new Level();
+		level = new Level(this);
 	}
 
 	@Override
