@@ -1,11 +1,14 @@
 package com.engine.gameState;
 
 import com.engine.data.DataFile;
+import com.engine.level.Level;
 
 public class GameStateManager {
 
 	public static String fileLocation = "C:/levels";
 	public static DataFile file = new DataFile("CurrentLevel", null);
+
+	public static Level currentLevel = new Level();
 
 	public static enum STATE {
 		MAIN_MENU(), LEVEL_EDIT();
@@ -71,6 +74,7 @@ public class GameStateManager {
 
 	public static void loadDataFromFile() {
 		file.loadDataFromFile();
+		currentLevel.init();
 	}
 
 	public static void save() {

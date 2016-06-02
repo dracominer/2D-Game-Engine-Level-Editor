@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.engine.camera.Camera;
 import com.engine.gameState.GameStateManager;
-import com.engine.gameState.StateLevelEditing;
 import com.engine.level.tiles.Tile;
 import com.engine.level.tiles.TileManager;
 import com.engine.render.MasterRenderer;
@@ -30,18 +29,20 @@ public class Level {
 
 	protected Tile selectedTile = null;
 
-	private StateLevelEditing owner;
-
-	public Level(StateLevelEditing stateLevelEditing) {
-		this.owner = stateLevelEditing;
+	public Level() {
 		renderer = new MasterRenderer();
 		tileManager = new TileManager(25, 25);
 		cam = new Camera(new Vector3f(0, 0, 5));
 		picker = new MousePicker(cam, MasterRenderer.getProjectionMatrix());
+	}
+
+	public void init() {
 		if (GameStateManager.file.getLocation() != null) {
 			tileManager.loadLevel(GameStateManager.file);
+			System.out.println("Loaded data from selected file");
 		} else {
 			tileManager.fillWithTile(TileManager.grass);
+			System.err.println("Filled the world with grass. File was not selected.");
 		}
 	}
 
@@ -142,20 +143,6 @@ public class Level {
 	 */
 	public void setSelectedTile(Tile selectedTile) {
 		this.selectedTile = selectedTile;
-	}
-
-	/**
-	 * @return the owner
-	 */
-	public StateLevelEditing getOwner() {
-		return owner;
-	}
-
-	/**
-	 * @param owner the owner to set
-	 */
-	public void setOwner(StateLevelEditing owner) {
-		this.owner = owner;
 	}
 
 	/**
