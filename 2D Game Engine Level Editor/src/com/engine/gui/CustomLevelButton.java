@@ -2,6 +2,8 @@ package com.engine.gui;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import com.engine.gui.window.CustomLevelDialogue;
+
 public class CustomLevelButton extends GuiInteractable {
 
 	public CustomLevelButton(int textureID, Vector2f position, Vector2f scale) {
@@ -11,7 +13,7 @@ public class CustomLevelButton extends GuiInteractable {
 	@Override
 	protected void onMouseTouching(int mouseButton, Vector2f position) {
 		if (mouseButton != -1) {
-			//TODO make the dialogue box give the data over to the level to process.
+			new CustomLevelDialogue();
 		}
 	}
 

@@ -16,10 +16,6 @@ public class StateLevelEditing extends GameState {
 		GameStateManager.currentLevel.render();
 	}
 
-	public void onOpened() {
-		GameStateManager.currentLevel.init();
-	}
-
 	public void onClosed() {}
 
 }

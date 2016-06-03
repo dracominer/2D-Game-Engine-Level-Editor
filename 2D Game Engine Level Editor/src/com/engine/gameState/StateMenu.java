@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.engine.gameState.GameStateManager.STATE;
+import com.engine.gui.CustomLevelButton;
 import com.engine.gui.GuiStateChangeButton;
 import com.engine.gui.GuiUpdatable;
 import com.engine.gui.SelectFileButton;
@@ -30,11 +31,13 @@ public class StateMenu extends GameState {
 		renderer = new MenuRenderer(false);
 		rendererGuis = new GuiRenderer();
 		TextureManager.registerTexture("button", "/gui/button");
-		SelectFileButton fileSelect = new SelectFileButton(TextureManager.get("button"), new Vector2f(0f, 0f), new Vector2f(0.125f, 0.125f));
+		CustomLevelButton custom = new CustomLevelButton(TextureManager.get("button"), new Vector2f(0.5f, 0f), new Vector2f(0.125f, 0.125f));
+		SelectFileButton fileSelect = new SelectFileButton(TextureManager.get("button"), new Vector2f(-0.5f, 0f), new Vector2f(0.125f, 0.125f));
 		GuiStateChangeButton button = new GuiStateChangeButton(TextureManager.get("button"), new Vector2f(0.0f, -0.75f), new Vector2f(0.75f, 0.125f));
 		button.setNewState(STATE.LEVEL_EDIT.toString());
 		guis.add(fileSelect);
 		guis.add(button);
+		guis.add(custom);
 	}
 
 	@Override

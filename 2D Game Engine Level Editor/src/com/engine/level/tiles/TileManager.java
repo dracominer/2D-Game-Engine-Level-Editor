@@ -2,10 +2,12 @@ package com.engine.level.tiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import com.engine.data.DataFile;
+import com.engine.level.tiles.generation.CelularAutonoma;
 import com.engine.render.MasterRenderer;
 import com.engine.render.textures.TextureManager;
 import com.engine.toolbox.Strings;
@@ -22,10 +24,13 @@ public class TileManager {
 	private int width;
 	private int height;
 
+	private Random rand = new Random();
+
 	public TileManager(int width, int height) {
 		this();
 		this.height = height;
 		this.width = width;
+		tiles = new Tile[width][height];
 	}
 
 	public TileManager() {
@@ -33,6 +38,43 @@ public class TileManager {
 		tiles = new Tile[50][50];
 		grass = new Tile(TextureManager.get(prefix + "grass"), 1.04f).setSolid(false);
 		stone = new Tile(TextureManager.get(prefix + "stone"), 1.01f).setSolid(true).setRestitution(1.5f);
+	}
+
+	private CelularAutonoma autonoma;
+	private boolean[][] cells;
+
+	public void generateCellularAutonoma(float chanceToStartAlive, int numberOfSteps, long seed) {
+		autonoma = new CelularAutonoma(chanceToStartAlive, numberOfSteps);
+		autonoma.setSeed(seed);
+		cells = autonoma.generate(width, height);
+		processCellList(cells);
+	}
+
+	public void step(boolean broken) {
+		cells = autonoma.doSimulationStep(cells);
+		processCellList(cells);
+	}
+
+	private void processCellList(boolean[][] cells) {
+		for (int x = 0; x < cells.length; x++) {
+			for (int y = 0; y < cells[0].length; y++) {
+				tiles[x][y] = cells[x][y] ? stone.copy().setPosition(x, y) : grass.copy().setPosition(x, y);
+			}
+		}
+	}
+
+	public void randomNoise(Tile[] options) {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[0].length; y++) {
+				int index = rand.nextInt(options.length);
+				Tile t = options[index];
+				if (t != null) {
+					tiles[x][y] = t.copy().setPosition(x, y);
+				} else {
+					tiles[x][y] = null;
+				}
+			}
+		}
 	}
 
 	public void fillWithTile(Tile tile) {

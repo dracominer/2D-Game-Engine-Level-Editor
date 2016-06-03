@@ -74,7 +74,7 @@ public class GameStateManager {
 
 	public static void loadDataFromFile() {
 		file.loadDataFromFile();
-		currentLevel.init();
+		currentLevel.getTileManager().loadLevel(file);
 	}
 
 	public static void save() {

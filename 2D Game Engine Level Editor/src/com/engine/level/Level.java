@@ -5,10 +5,11 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.engine.camera.Camera;
-import com.engine.gameState.GameStateManager;
+import com.engine.entites.Entity;
 import com.engine.level.tiles.Tile;
 import com.engine.level.tiles.TileManager;
 import com.engine.render.MasterRenderer;
+import com.engine.render.textures.TextureManager;
 import com.engine.toolbox.MousePicker;
 
 public class Level {
@@ -17,7 +18,7 @@ public class Level {
 	private static final float maxCamZ = 50f;
 	private static final float MOUSE_SENSITIVITY = 0.01f;
 	private static final float CAM_MOVE_SPEED = 20f;
-	private static final float CAM_MOVE_THRESHOLD = 0.75f;
+	private static final float CAM_MOVE_THRESHOLD = 0.1f;
 
 	protected Camera cam;
 
@@ -29,21 +30,16 @@ public class Level {
 
 	protected Tile selectedTile = null;
 
+	private Entity selection;
+
 	public Level() {
 		renderer = new MasterRenderer();
 		tileManager = new TileManager(25, 25);
 		cam = new Camera(new Vector3f(0, 0, 5));
 		picker = new MousePicker(cam, MasterRenderer.getProjectionMatrix());
-	}
+		TextureManager.registerTexture("select", "/sprites/select");
+		selection = new Entity(this, new Vector2f(), 0, Tile.TileSize / 2f, TextureManager.getTexture("select"));
 
-	public void init() {
-		if (GameStateManager.file.getLocation() != null) {
-			tileManager.loadLevel(GameStateManager.file);
-			System.out.println("Loaded data from selected file");
-		} else {
-			tileManager.fillWithTile(TileManager.grass);
-			System.err.println("Filled the world with grass. File was not selected.");
-		}
 	}
 
 	public void update() {
@@ -65,6 +61,9 @@ public class Level {
 		if (Mouse.isButtonDown(1)) {
 			tileManager.setTile(position, null);
 		}
+		int x = (int) Math.floor(position.x / Tile.TileSize);
+		int y = (int) Math.floor(position.y / Tile.TileSize);
+		selection.setPosition(new Vector2f(x * Tile.TileSize, y * Tile.TileSize));
 	}
 
 	public void render() {
@@ -79,6 +78,7 @@ public class Level {
 
 	private void process() {
 		tileManager.processTiles(renderer);
+		renderer.processEntity(selection);
 	}
 
 	public Camera getCam() {
