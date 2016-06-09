@@ -33,7 +33,7 @@ public class DataFile {
 
 	public DataFile(String name) {
 		this.name = name;
-		this.location = System.getProperty("user.home");
+		this.location = System.getProperty("user.home") + "/temp.dna";
 	}
 
 	public void init() {
@@ -99,6 +99,7 @@ public class DataFile {
 			fw = new FileWriter(file);
 			if (fw != null) {
 				BufferedWriter w = new BufferedWriter(fw);
+
 				for (String line : lines) {
 					if (line == null) continue;
 					w.write(line);

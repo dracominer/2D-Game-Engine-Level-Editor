@@ -13,7 +13,7 @@ public class MousePicker {
 
 	private static final int RECURSION_COUNT = 200;
 	private static final float RAY_RANGE = 600;
-	private static final float CLOSE_ENOUGH = 2f;
+	private static final float CLOSE_ENOUGH = 0.5f;
 
 	private Vector3f currentRay = new Vector3f();
 

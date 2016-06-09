@@ -175,7 +175,7 @@ public class TileManager {
 			t.setSolid(Boolean.parseBoolean(parts[3]));
 			t.setTexture(TextureManager.get(parts[4]));
 			t.setPosition(load_X, load_Y);
-			System.out.println("loading a tile @ (" + load_X + "," + load_Y + ").");
+			//			System.out.println("loading a tile @ (" + load_X + "," + load_Y + ").");
 			setTile(load_X, load_Y, t);
 			load_Y++;
 			return;

@@ -6,7 +6,7 @@ import com.engine.level.Level;
 public class GameStateManager {
 
 	public static String fileLocation = "C:/levels";
-	public static DataFile file = new DataFile("CurrentLevel", null);
+	public static DataFile file = new DataFile("CurrentLevel");
 
 	public static Level currentLevel = new Level();
 
@@ -39,6 +39,7 @@ public class GameStateManager {
 
 	public static void init() {
 		loadGameStates();
+		file.init();
 	}
 
 	private static void loadGameStates() {
@@ -77,7 +78,12 @@ public class GameStateManager {
 		currentLevel.getTileManager().loadLevel(file);
 	}
 
+	public static void putLevelDataInFile() {
+		GameStateManager.currentLevel.loadDataToFile(GameStateManager.file);
+	}
+
 	public static void save() {
+		putLevelDataInFile();
 		file.saveData();
 	}
 

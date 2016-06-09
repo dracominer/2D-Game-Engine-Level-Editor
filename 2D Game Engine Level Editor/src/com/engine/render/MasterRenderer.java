@@ -33,7 +33,7 @@ public class MasterRenderer implements Cleanupable {
 	private static Matrix4f projectionMatrix;
 
 	public MasterRenderer() {
-		createProjectionMatrix();
+		createProjectionMatrix_Persepective();
 		entityRenderer = new EntityRenderer(projectionMatrix);
 		guiRenderer = new GuiRenderer();
 		TextMaster.init(Loader.get());
@@ -56,10 +56,10 @@ public class MasterRenderer implements Cleanupable {
 	}
 
 	public static void initProjectionMatrix() {
-		createProjectionMatrix();
+		createProjectionMatrix_Persepective();
 	}
 
-	private static void createProjectionMatrix() {
+	public static void createProjectionMatrix_Persepective() {
 		projectionMatrix = new Matrix4f();
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))));
@@ -71,6 +71,25 @@ public class MasterRenderer implements Cleanupable {
 		projectionMatrix.m23 = -1;
 		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0;
+	}
+
+	public static void createProjectionMatrix_Ortho() {
+		projectionMatrix = new Matrix4f();
+		float right = DisplayManager.getWidth();
+		float left = -DisplayManager.getWidth();
+		float top = DisplayManager.getHeight();
+		float bottom = -DisplayManager.getHeight();
+		float near = NEAR_PLANE;
+		float far = FAR_PLANE;
+		projectionMatrix.m00 = 2f / (right - left);
+		projectionMatrix.m11 = 2f / (top - bottom);
+		projectionMatrix.m22 = -2f / (far - near);
+		projectionMatrix.m33 = 1;
+		//
+		projectionMatrix.m03 = -((right + left) / (right - left));
+		projectionMatrix.m13 = -((top + bottom) / (top - bottom));
+		projectionMatrix.m23 = -((far + near) / (far - near));
+		System.out.println(projectionMatrix.toString());
 	}
 
 	public static Matrix4f getProjectionMatrix() {

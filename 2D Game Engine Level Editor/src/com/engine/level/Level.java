@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.engine.camera.Camera;
+import com.engine.data.DataFile;
 import com.engine.entites.Entity;
 import com.engine.level.tiles.Tile;
 import com.engine.level.tiles.TileManager;
@@ -192,6 +193,10 @@ public class Level {
 	 */
 	public void setTileManager(TileManager tileManager) {
 		this.tileManager = tileManager;
+	}
+
+	public void loadDataToFile(DataFile file) {
+		tileManager.putTilesIntoData(file);
 	}
 
 }
